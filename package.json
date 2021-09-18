@@ -1,0 +1,13 @@
+{
+  "devDependencies": {
+    "sequelize": "^6.6.5",
+    "sequelize-cli": "^6.2.0"
+  },
+  "dependencies": {
+    "pg": "^8.7.1"
+  },
+  "scripts":{
+    "db:migrate":"npx sequelize db:migrate",
+    "start":"db:migrate"
+  }
+}
