@@ -8,6 +8,6 @@
   },
   "scripts":{
     "db:migrate":"npx sequelize db:migrate",
-    "start":"db:migrate"
+    "start":"npm run db:migrate"
   }
 }
