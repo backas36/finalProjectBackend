@@ -1,9 +1,12 @@
 const jwt = require('jsonwebtoken');
 const db = require('../models')
 require('dotenv').config();
+const Sequelize = require('sequelize');
+const Op = Sequelize.Op;
 
 const { Product } = db
 
+console.log(Product)
 const productsController = {
   create: (req, res) => {
     const { name, desc, img_url, price, market_price, limited } = req.body
@@ -45,7 +48,7 @@ const productsController = {
       },
       {
         where: {
-          id
+          id:id
         }
       })
       .then(() => {
@@ -60,8 +63,9 @@ const productsController = {
     const { id } = req.body
     Product
       .findOne({
+        attributes: { exclude: ['productId'] },
         where: {
-          id
+          id:id
         }
       })
       .then((product) => {
@@ -71,6 +75,42 @@ const productsController = {
         res.send({ 'success':false, 'message':err.message })
       }
     )
+  },
+  delete: (req, res) => {
+    // 未做權限管理
+    Product
+      .findOne({
+        attributes: { exclude: ['productId'] },
+        where: {
+          id: req.params.id
+        }
+      }).then(product => {
+        return product.update({
+          is_deleted: true
+        })
+      }).then(() => {
+        res.send({ 'success':true, 'message':'Product deleted' })
+      }).catch(err => {
+        res.send({ 'success':false, 'message': err.message })
+      })
+  },
+  search: (req, res) => {
+    Product
+      .findAll({
+        attributes: { exclude: ['productId'] },
+        where: {
+          name: {[Op.like]: `%${req.params.name}%`}
+        }
+      }).then((products) => {
+        res.send(
+          { 'success':true, 
+            'message':'Product search successfully', 
+            'data': products
+          }
+        )
+      }).catch(err => {
+        res.send({ 'success': false, 'message': err.message })
+      })
   }
 }
 

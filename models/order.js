@@ -10,11 +10,11 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      Order.belongsTo(models.user, {
+      Order.belongsTo(models.User, {
         foreignKey: 'userId',
         onDelete: 'CASCADE'
       })
-      Order.hasOne(models.discount, {
+      Order.hasOne(models.Discount, {
         foreignKey: 'discountId',
         onDelete: 'CASCADE'
       })
@@ -24,6 +24,7 @@ module.exports = (sequelize, DataTypes) => {
     accepted_at: DataTypes.DATE,
     completed_at: DataTypes.DATE,
     is_accepted: DataTypes.BOOLEAN,
+    is_completed: DataTypes.BOOLEAN,
     price: DataTypes.INTEGER,
     sum: DataTypes.INTEGER,
   }, {
