@@ -14,7 +14,7 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: 'orderId',
         onDelete: 'CASCADE'
       })
-      Transaction.hasOne(models.Product, {
+      Transaction.belongsTo(models.Product, {
         foreignKey: 'productId',
         onDelete: 'CASCADE'
       })

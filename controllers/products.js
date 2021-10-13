@@ -8,12 +8,19 @@ const { Product } = db
 
 console.log(Product)
 const productsController = {
-  create: (req, res) => {
-    const { name, desc, img_url, price, market_price, limited } = req.body
-    if (!name || !desc || !img_url || !price || !market_price || !limited) {
-      res.send({ 'success':false, 'message':'Please enter every field' })
+  create: (req, res, next) => {
+    const { authority } = req.user
+    if (authority !== 1) {
       return
     }
+    const { name, desc, img_url, price, market_price, limited } = req.body
+    if (!name || !desc || !img_url || !price || !market_price || !limited) {
+      const error = new Error('Please enter every field')
+      error.statusCode = 422
+      next(error)
+      return
+    }
+    
     Product
       .create({
         name,
@@ -27,14 +34,23 @@ const productsController = {
         res.send({ 'success':true, 'message':'Product created' })
       })
       .catch(err => {
-        res.send({ 'success':false, 'message':err.message })
+        const error = new Error(err.toString())
+        error.statusCode = 500
+        next(error)
+        return
       }
     )
   },
-  update: (req, res) => {
+  update: (req, res, next) => {
+    const { authority } = req.user
+    if (authority !== 1) {
+      return
+    }
     const { name, desc, img_url, price, market_price, limited, id } = req.body
     if (!name || !desc || !img_url || !price || !market_price || !limited) {
-      res.send({ 'success':false, 'message':'Please enter every field' })
+      const error = new Error('Please enter every field')
+      error.statusCode = 422
+      next(error)
       return
     }
     Product
@@ -55,29 +71,37 @@ const productsController = {
         res.send({ 'success':true, 'message':'Product update' })
       })
       .catch(err => {
-        res.send({ 'success':false, 'message':err.message })
+        const error = new Error(err.toString())
+        error.statusCode = 500
+        next(error)
+        return
       }
     )
   },
-  find: (req, res) => {
-    const { id } = req.body
+  find: (req, res, next) => {
     Product
       .findOne({
         attributes: { exclude: ['productId'] },
         where: {
-          id:id
+          id:req.params.id
         }
       })
       .then((product) => {
         res.send({ 'success':true, 'message':'Find Product', product })
       })
       .catch(err => {
-        res.send({ 'success':false, 'message':err.message })
+        const error = new Error(err.toString())
+        error.statusCode = 500
+        next(error)
+        return
       }
     )
   },
-  delete: (req, res) => {
-    // 未做權限管理
+  delete: (req, res, next) => {
+    const { authority } = req.user
+    if (authority !== 1) {
+      return
+    }
     Product
       .findOne({
         attributes: { exclude: ['productId'] },
@@ -91,10 +115,13 @@ const productsController = {
       }).then(() => {
         res.send({ 'success':true, 'message':'Product deleted' })
       }).catch(err => {
-        res.send({ 'success':false, 'message': err.message })
+        const error = new Error(err.toString())
+        error.statusCode = 500
+        next(error)
+        return
       })
   },
-  search: (req, res) => {
+  search: (req, res, next) => {
     Product
       .findAll({
         attributes: { exclude: ['productId'] },
@@ -109,7 +136,10 @@ const productsController = {
           }
         )
       }).catch(err => {
-        res.send({ 'success': false, 'message': err.message })
+        const error = new Error(err.toString())
+        error.statusCode = 500
+        next(error)
+        return
       })
   }
 }

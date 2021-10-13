@@ -1,9 +1,11 @@
 const jwt = require('jsonwebtoken')
 const bcrypt = require('bcrypt')
-const saltRounds = 10
-
+const path = require('path')
 const db = require('../models')
-require('dotenv').config()
+require('dotenv').config({ path: path.resolve(__dirname, '../.env') })
+
+const saltRounds = 10
+console.log(path.resolve(__dirname, '../.env'))
 const { User } = db
 
 const userController = {
@@ -40,7 +42,7 @@ const userController = {
           email: createUser.email,
           userId: createUser.id
         },
-          'secret',
+          process.env.SECRET,
           { expiresIn: '2h' }
         )
         res.status(201).json({ 'success': true, 'message': 'User created', token })
@@ -93,7 +95,7 @@ const userController = {
           email: user.email,
           userId: user.id
         },
-          'secret',
+          process.env.SECRET,
           { expiresIn: '2h' }
         )
         res.status(200).json({ 'success': true, 'message': '登入成功', token })

@@ -10,10 +10,10 @@ const port = process.env.PORT || 5000
 app.use(bodyParser.urlencoded({ extend: false }))
 app.use(bodyParser.json())
 
-app.post('/createProducts', productsController.create)
-app.post('/updateProducts', productsController.update)
-app.post('/findProducts', productsController.find)
-app.get('/deleteProducts/:id', productsController.delete)
+app.post('/createProducts', auth, productsController.create)
+app.post('/updateProducts', auth, productsController.update)
+app.get('/findProducts/:id', productsController.find)
+app.get('/deleteProducts/:id', auth, productsController.delete)
 app.get('/searchProducts/:name', productsController.search)
 
 app.post('/register', userController.postRegister)

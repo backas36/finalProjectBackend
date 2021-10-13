@@ -14,7 +14,7 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: 'userId',
         onDelete: 'CASCADE'
       })
-      Order.hasOne(models.Discount, {
+      Order.belongsTo(models.Discount, {
         foreignKey: 'discountId',
         onDelete: 'CASCADE'
       })
