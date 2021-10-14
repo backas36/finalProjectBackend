@@ -24,6 +24,7 @@ app.post('/user', auth, userController.postUpdateUser)
 app.post('/update-password', auth, userController.postUpdatePassword)
 
 app.post('/newOrder', auth, orderController.newOrder)
+app.get('/getAllOrder', auth, orderController.getAll)
 app.get('/getOneOrder/:id', auth, orderController.getOneOrder)
 app.get('/deleteOrder/:id', auth, orderController.deleteOrder)
 
