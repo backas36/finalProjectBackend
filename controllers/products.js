@@ -81,7 +81,6 @@ const productsController = {
   find: (req, res, next) => {
     Product
       .findOne({
-        attributes: { exclude: ['productId'] },
         where: {
           id:req.params.id
         }
@@ -104,7 +103,6 @@ const productsController = {
     }
     Product
       .findOne({
-        attributes: { exclude: ['productId'] },
         where: {
           id: req.params.id
         }

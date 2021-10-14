@@ -21,8 +21,13 @@ const isDiscount = async (total) => {
 }
 
 const orderController = {
+  
   getAll: (req, res) => {
     // 取得全部訂單
+    const { authority } = req.user
+    if (authority !== 1) {
+      return
+    }
     Order.findAll({})
       .then((orders) => {
         if (!orders || orders.length === 0) {
@@ -47,20 +52,49 @@ const orderController = {
 
   getOneOrder: (req, res) => {
     // 取得單一訂單
+    const { id, authority } = req.user
     Order.findOne({
       where: {
         id: req.params.id,
       },
     }).then((order) => {
-      if (!order)
-        return res.send({ success: false, message: "sorry there is no order" });
-      // 先略
+      if (order.userId!==id && authority !==1) return
+      if (!order) return res.send({ success: false, message: "sorry there is no order" });
+      res.send({
+        success: true,
+        message: "Get an Order",
+        data: order,
+      });
     });
   },
 
-  deleteOrder: (req, res) => {
+  deleteOrder: (req, res, next) => {
     // 商家拒單
-    Order.destroy();
+    const { authority } = req.user
+    if (authority !== 1) {
+      const error = new Error('Not authorized')
+      error.statusCode = 500
+      next(error)
+      return
+    }
+    Order
+      .findOne({
+        where: {
+          id: req.params.id,
+        }
+      }).then(order => {
+        return order.update({
+          is_accepted: false,
+          accepted_at: Date.now()
+        })
+      }).then(() => {
+        res.send({ 'success':true, 'message':'Order is rejected' })
+      }).catch(err => {
+        const error = new Error(err.toString())
+        error.statusCode = 500
+        next(error)
+        return
+      })
   },
 
   newOrder: async (req, res) => {

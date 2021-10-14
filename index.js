@@ -24,8 +24,8 @@ app.post('/user', auth, userController.postUpdateUser)
 app.post('/update-password', auth, userController.postUpdatePassword)
 
 app.post('/newOrder', auth, orderController.newOrder)
-app.post('/getOneOrder', auth, orderController.getOneOrder)
-app.post('/deleteOrder', auth, orderController.deleteOrder)
+app.get('/getOneOrder/:id', auth, orderController.getOneOrder)
+app.get('/deleteOrder/:id', auth, orderController.deleteOrder)
 
 //錯誤處理的middleware
 app.use((error, req, res, next) => {
