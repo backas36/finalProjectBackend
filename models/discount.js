@@ -14,7 +14,6 @@ module.exports = (sequelize, DataTypes) => {
     }
   };
   Discount.init({
-    id: DataTypes.INTEGER,
     desc: DataTypes.TEXT,
     price: DataTypes.INTEGER,
     threshold: DataTypes.SMALLINT,

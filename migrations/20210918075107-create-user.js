@@ -8,9 +8,6 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      id: {
-        type: Sequelize.INTEGER
-      },
       username: {
         type: Sequelize.STRING
       },
@@ -27,13 +24,12 @@ module.exports = {
         type: Sequelize.STRING
       },
       email: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        allowNull: false,
+        unique: true
       },
-      adress: {
+      address: {
         type: Sequelize.TEXT
-      },
-      created_at: {
-        type: Sequelize.DATE
       },
       authority: {
         type: Sequelize.INTEGER

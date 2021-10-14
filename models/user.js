@@ -2,6 +2,9 @@
 const {
   Model
 } = require('sequelize');
+const bcrypt = require('bcrypt')
+const jwt = require('jsonwebtoken')
+require('dotenv').config();
 module.exports = (sequelize, DataTypes) => {
   class User extends Model {
     /**
@@ -10,19 +13,17 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      // define association here
+      
     }
   };
   User.init({
-    id: DataTypes.INTEGER,
     username: DataTypes.STRING,
     password: DataTypes.STRING,
     firstname: DataTypes.STRING,
     lastname: DataTypes.STRING,
     phone: DataTypes.STRING,
     email: DataTypes.STRING,
-    adress: DataTypes.TEXT,
-    created_at: DataTypes.DATE,
+    address: DataTypes.TEXT,
     authority: DataTypes.INTEGER
   }, {
     sequelize,
