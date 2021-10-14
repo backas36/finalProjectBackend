@@ -15,6 +15,6 @@
   },
   "scripts": {
     "db:migrate": "npx sequelize-cli db:migrate",
-    "start": "npx sequelize-cli db:migrate:undo && npx sequelize-cli db:migrate && node index.js"
+    "start": "node index.js"
   }
 }
