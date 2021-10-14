@@ -2,6 +2,7 @@ const express = require('express')
 const bodyParser = require('body-parser')
 const productsController = require('./controllers/products')
 const userController = require('./controllers/users')
+const orderController = require('./controllers/orders')
 const auth = require('./middleware/auth')
 
 const app = express()
@@ -22,6 +23,9 @@ app.get('/user', auth, userController.getUser)
 app.post('/user', auth, userController.postUpdateUser)
 app.post('/update-password', auth, userController.postUpdatePassword)
 
+app.post('/newOrder', auth, orderController.newOrder)
+app.post('/getOneOrder', auth, orderController.getOneOrder)
+app.post('/deleteOrder', auth, orderController.deleteOrder)
 
 //錯誤處理的middleware
 app.use((error, req, res, next) => {

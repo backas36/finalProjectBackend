@@ -24,7 +24,6 @@ module.exports = (sequelize, DataTypes) => {
     accepted_at: DataTypes.DATE,
     completed_at: DataTypes.DATE,
     is_accepted: DataTypes.BOOLEAN,
-    is_completed: DataTypes.BOOLEAN,
     price: DataTypes.INTEGER,
     sum: DataTypes.INTEGER,
   }, {

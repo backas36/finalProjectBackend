@@ -43,7 +43,7 @@ const userController = {
           userId: createUser.id
         },
           process.env.SECRET,
-          { expiresIn: '2h' }
+          { expiresIn: '30d' }
         )
         res.status(201).json({ 'success': true, 'message': 'User created', token })
 
@@ -96,7 +96,7 @@ const userController = {
           userId: user.id
         },
           process.env.SECRET,
-          { expiresIn: '2h' }
+          { expiresIn: '30d' }
         )
         res.status(200).json({ 'success': true, 'message': '登入成功', token })
       })

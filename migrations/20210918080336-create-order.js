@@ -9,19 +9,24 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       accepted_at: {
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
+        allowNull:true
       },
       completed_at: {
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
+        allowNull:true
       },
       is_accepted: {
-        type: Sequelize.BOOLEAN
+        type: Sequelize.BOOLEAN,
+        allowNull:true
       },
       price: {
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+        allowNull:true
       },
       sum: {
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+        allowNull:true
       },
       createdAt: {
         allowNull: false,
