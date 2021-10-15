@@ -96,6 +96,22 @@ const productsController = {
       }
     )
   },
+  findAllProducts: (req, res, next) => {
+    Product
+      .findAll({
+        raw: true
+      })
+      .then((products) => {
+        res.send({ 'success':true, 'message':'Find Products', products })
+      })
+      .catch(err => {
+        const error = new Error(err.toString())
+        error.statusCode = 500
+        next(error)
+        return
+      }
+    )
+  },
   delete: (req, res, next) => {
     const { authority } = req.user
     if (authority !== 1) {

@@ -3,10 +3,10 @@ module.exports = {
   up: async (queryInterface, Sequelize) => {
     await queryInterface.createTable('Products', {
       id: {
-        allowNull: false,
-        autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER
+        type: Sequelize.UUID,
+        defaultValue: DataTypes.UUIDV4,
+        allowNull: false
       },
       name: {
         type: Sequelize.STRING
@@ -29,6 +29,18 @@ module.exports = {
       is_deleted: {
         type: Sequelize.BOOLEAN
       },
+      is_completed: Sequelize.BOOLEAN,
+      buyerName: Sequelize.STRING,
+      buyerPhone: Sequelize.STRING,
+      buyerAddress: Sequelize.TEXT,
+      deliverDate: Sequelize.DATE,
+      receiverName: Sequelize.STRING,
+      receiverPhone: Sequelize.STRING,
+      receiverAddress: Sequelize.TEXT,
+      lastFiveNumber: Sequelize.STRING,
+      donateInvoice: Sequelize.BOOLEAN,
+      invoiceType: Sequelize.STRING,
+      invoiceNumber: Sequelize.STRING,
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE

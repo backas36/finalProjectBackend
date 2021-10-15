@@ -97,17 +97,101 @@ const orderController = {
       })
   },
 
+  acceptOrder: (req, res, next) => {
+    // 商家接單
+    const { authority } = req.user
+    if (authority !== 1) {
+      const error = new Error('Not authorized')
+      error.statusCode = 500
+      next(error)
+      return
+    }
+    Order
+      .findOne({
+        where: {
+          id: req.params.id,
+        }
+      }).then(order => {
+        return order.update({
+          is_accepted: true,
+          accepted_at: Date.now()
+        })
+      }).then(() => {
+        res.send({ 'success':true, 'message':'Order is rejected' })
+      }).catch(err => {
+        const error = new Error(err.toString())
+        error.statusCode = 500
+        next(error)
+        return
+      })
+  },
+
+  updateOrder: (req, res, next) => {
+    // 更新訂單
+    const { authority } = req.user
+    if (authority !== 1) {
+      const error = new Error('Not authorized')
+      error.statusCode = 500
+      next(error)
+      return
+    }
+
+    const clientResult = JSON.parse(req.body.data)
+    const orderObj = req.body.order
+    let price = 0
+    let sum = 0
+    // update transaction
+    for (let product of clientResult) {
+      const prod  = await Product.findOne({where:{ id:product.id }})
+      await Transaction
+        .upsert({ 
+            quantity:product.number 
+          },
+          {
+            where: {
+              orderId:orderObj.id, productId:product.id
+            }
+          })
+      sum += prod.price*product.number
+    }
+    // add discount
+    const discount = await isDiscount(sum)
+    if (discount) {
+      price = sum + discount.shipment
+    }
+
+    // update order
+    const orderObjUpdate = await Order.update({ sum, price, discountId:discount.id }, { where: { id:orderObj.id } })
+    res.send({ 
+      success:true,
+      data:orderObjUpdate
+     })
+  },
+
   newOrder: async (req, res) => {
     // 成立訂單 [{"id":1, "name": "cake", "number":1}, {"id":2, "name": "tea", "number":1}]
-    const clientResult = JSON.parse(req.body.data)
+    const products = JSON.parse(req.body.products)
+    const order = JSON.parse(req.body.order)
     const { id } = req.user
     let price = 0
     let sum = 0
     const orderObj = await Order.create({ 
         userId:id,
+        buyerName: order.buyerName,
+        buyerPhone: order.buyerPhone,
+        buyerAddress: order.buyerAddress,
+        deliverDate: order.deliverDate,
+        receiverName: order.receiverName,
+        receiverPhone: order.receiverPhone,
+        receiverAddress: order.receiverAddress,
+        lastFiveNumber: order.lastFiveNumber,
+        donateInvoice: order.donateInvoice,
+        invoiceType: order. invoiceType,
+        invoiceNumber: order.invoiceNumber,
         accepted_at: null,
         completed_at: null,
         is_accepted: null,
+        is_completed: null,
         price:null,
         sum:null
       },
@@ -115,8 +199,7 @@ const orderController = {
         omitNull: false 
       })
     // create transactions
-    for (let product of clientResult) {
-      //product = JSON.parse(product)
+    for (let product of products) {
       const prod = await Product.findOne({ where: { id: product.id } })
       await Transaction.create({ orderId:orderObj.id, productId:prod.id, quantity:product.number })
       sum += prod.price*product.number
@@ -124,7 +207,7 @@ const orderController = {
     // add discount
     const discount = await isDiscount(sum)
     if (discount) {
-      price = sum + discount.price
+      price = sum + discount.shipment
     }
 
     // update order
