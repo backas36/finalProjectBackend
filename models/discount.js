@@ -18,7 +18,10 @@ module.exports = (sequelize, DataTypes) => {
     price: DataTypes.INTEGER,
     threshold: DataTypes.SMALLINT,
     shipment: DataTypes.SMALLINT,
-    is_deleted: DataTypes.BOOLEAN
+    is_deleted: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false
+    }
   }, {
     sequelize,
     modelName: 'Discount',

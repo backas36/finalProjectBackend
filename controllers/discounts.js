@@ -4,33 +4,31 @@ require('dotenv').config();
 const Sequelize = require('sequelize');
 const Op = Sequelize.Op;
 
-const { Product } = db
+const { Discount } = db
 
-const productsController = {
+const DiscountsController = {
   create: (req, res, next) => {
     const { authority } = req.user
     if (authority !== 1) {
       return
     }
-    const { name, desc, img_url, price, market_price, limited } = req.body
-    if (!name || !desc || !img_url || !price || !market_price || !limited) {
+    const { desc, price, threshold, shipment } = req.body
+    if (!desc || !threshold || !price || !shipment ) {
       const error = new Error('Please enter every field')
       error.statusCode = 422
       next(error)
       return
     }
     
-    Product
+    Discount
       .create({
-        name,
-        desc,
-        img_url,
-        price,
-        market_price,
-        limited
+        desc, 
+        price, 
+        threshold, 
+        shipment
       })
       .then(() => {
-        res.send({ 'success':true, 'message':'Product created' })
+        res.send({ 'success':true, 'message':'Discount created' })
       })
       .catch(err => {
         const error = new Error(err.toString())
@@ -45,21 +43,19 @@ const productsController = {
     if (authority !== 1) {
       return
     }
-    const { name, desc, img_url, price, market_price, limited, id } = req.body
-    if (!name || !desc || !img_url || !price || !market_price || !limited) {
+    const { desc, price, threshold, shipment, id } = req.body
+    if (!desc || !threshold || !price || !shipment) {
       const error = new Error('Please enter every field')
       error.statusCode = 422
       next(error)
       return
     }
-    Product
+    Discount
       .update({
-        name,
-        desc,
-        img_url,
-        price,
-        market_price,
-        limited
+        desc, 
+        price, 
+        threshold, 
+        shipment
       },
       {
         where: {
@@ -67,7 +63,7 @@ const productsController = {
         }
       })
       .then(() => {
-        res.send({ 'success':true, 'message':'Product update' })
+        res.send({ 'success':true, 'message':'Discount update' })
       })
       .catch(err => {
         const error = new Error(err.toString())
@@ -78,14 +74,14 @@ const productsController = {
     )
   },
   find: (req, res, next) => {
-    Product
+    Discount
       .findOne({
         where: {
           id:req.params.id
         }
       })
-      .then((product) => {
-        res.send({ 'success':true, 'message':'Find Product', product })
+      .then((Discount) => {
+        res.send({ 'success':true, 'message':'Find Discount', Discount })
       })
       .catch(err => {
         const error = new Error(err.toString())
@@ -95,13 +91,13 @@ const productsController = {
       }
     )
   },
-  findAllProducts: (req, res, next) => {
-    Product
+  findAllDiscounts: (req, res, next) => {
+    Discount
       .findAll({
         raw: true
       })
-      .then((products) => {
-        res.send({ 'success':true, 'message':'Find Products', products })
+      .then((Discounts) => {
+        res.send({ 'success':true, 'message':'Find Discounts', Discounts })
       })
       .catch(err => {
         const error = new Error(err.toString())
@@ -116,17 +112,17 @@ const productsController = {
     if (authority !== 1) {
       return
     }
-    Product
+    Discount
       .findOne({
         where: {
           id: req.params.id
         }
-      }).then(product => {
-        return product.update({
+      }).then(Discount => {
+        return Discount.update({
           is_deleted: true
         })
       }).then(() => {
-        res.send({ 'success':true, 'message':'Product deleted' })
+        res.send({ 'success':true, 'message':'Discount deleted' })
       }).catch(err => {
         const error = new Error(err.toString())
         error.statusCode = 500
@@ -135,17 +131,17 @@ const productsController = {
       })
   },
   search: (req, res, next) => {
-    Product
+    Discount
       .findAll({
-        attributes: { exclude: ['productId'] },
+        attributes: { exclude: ['DiscountId'] },
         where: {
-          name: {[Op.like]: `%${req.params.name}%`}
+          desc: {[Op.like]: `%${req.params.name}%`}
         }
-      }).then((products) => {
+      }).then((Discounts) => {
         res.send(
           { 'success':true, 
-            'message':'Product search successfully', 
-            'data': products
+            'message':'Discount search successfully', 
+            'data': Discounts
           }
         )
       }).catch(err => {
@@ -157,4 +153,4 @@ const productsController = {
   }
 }
 
-module.exports = productsController
+module.exports = DiscountsController

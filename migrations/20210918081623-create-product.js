@@ -1,11 +1,13 @@
 'use strict';
+const DataTypes = require('sequelize').DataTypes;
 module.exports = {
   up: async (queryInterface, Sequelize) => {
+    await queryInterface.sequelize.query('CREATE EXTENSION IF NOT EXISTS "pgcrypto";')
     await queryInterface.createTable('Products', {
       id: {
         primaryKey: true,
         type: Sequelize.UUID,
-        defaultValue: DataTypes.UUIDV4,
+        defaultValue: Sequelize.literal('gen_random_uuid()'),
         allowNull: false
       },
       name: {
