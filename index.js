@@ -5,12 +5,14 @@ const userController = require('./controllers/users')
 const orderController = require('./controllers/orders')
 const discountController = require('./controllers/discounts')
 const auth = require('./middleware/auth')
+const cors = require('cors');
 
 const app = express()
 const port = process.env.PORT || 5000
 
 app.use(bodyParser.urlencoded({ extend: false }))
 app.use(bodyParser.json())
+app.use(cors())
 
 app.post('/createProducts', auth, productsController.create)
 app.post('/updateProducts', auth, productsController.update)
