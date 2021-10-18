@@ -1,12 +1,14 @@
 'use strict';
+const DataTypes = require('sequelize').DataTypes;
 module.exports = {
   up: async (queryInterface, Sequelize) => {
+    await queryInterface.sequelize.query('CREATE EXTENSION IF NOT EXISTS "pgcrypto";')
     await queryInterface.createTable('Orders', {
       id: {
-        allowNull: false,
-        autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER
+        type: Sequelize.UUID,
+        defaultValue: Sequelize.literal('gen_random_uuid()'),
+        allowNull: false
       },
       accepted_at: {
         type: Sequelize.DATE,
@@ -16,7 +18,55 @@ module.exports = {
         type: Sequelize.DATE,
         allowNull:true
       },
+      buyerName: {
+        type: Sequelize.STRING,
+        allowNull:true
+      },
+      buyerPhone: {
+        type: Sequelize.STRING,
+        allowNull:true
+      },
+      buyerAddress: {
+        type: Sequelize.TEXT,
+        allowNull:true
+      },
+      deliverDate: {
+        type: Sequelize.DATE,
+        allowNull:true
+      },
+      receiverName: {
+        type: Sequelize.STRING,
+        allowNull:true
+      },
+      receiverPhone: {
+        type: Sequelize.STRING,
+        allowNull:true
+      },
+      receiverAddress: {
+        type: Sequelize.TEXT,
+        allowNull:true
+      },
+      lastFiveNumber: {
+        type: Sequelize.STRING,
+        allowNull:true
+      },
+      donateInvoice: {
+        type: Sequelize.BOOLEAN,
+        allowNull:true
+      },
+      invoiceType: {
+        type: Sequelize.STRING,
+        allowNull:true
+      },
+      invoiceNumber: {
+        type: Sequelize.STRING,
+        allowNull:true
+      },
       is_accepted: {
+        type: Sequelize.BOOLEAN,
+        allowNull:true
+      },
+      is_completed: {
         type: Sequelize.BOOLEAN,
         allowNull:true
       },
