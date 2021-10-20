@@ -47,6 +47,7 @@ app.get("/getAllCartItems", auth, cartController.getAll);
 app.post("/addCartItem", auth, cartController.addItem);
 app.post("/updateCartItem/:id", auth, cartController.updateItem);
 app.get("/deleteCartItem/:id", auth, cartController.deleteItem);
+app.get("/deleteAllCartItems", auth, cartController.deleteAll);
 //錯誤處理的middleware
 app.use((error, req, res, next) => {
   const status = error.statusCode || 500;

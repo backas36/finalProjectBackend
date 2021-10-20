@@ -14,6 +14,7 @@ const cartController = {
   getAll: async (req, res) => {
     // 取得購物車內所有商品
     await Cart_item.findAll({
+      raw: true,
       where: {
         UserId: req.user.id,
         is_empty: false,
@@ -134,6 +135,18 @@ const cartController = {
       .catch((err) => {
         return res.status(400).json({ success: false, message: err });
       });
+  },
+  deleteAll: async (req, res) => {
+    // 清空購物車
+    await Cart_item.destroy({
+      where: {
+        UserId: req.user.id,
+      }
+    }).then(() => {
+      return res.status(200).json({ success: true, message: "刪除用戶購物車所有商品成功" });
+    }).catch((err) => {
+      return res.status(404).json({ success: false, message: err });
+    });
   },
 };
 
