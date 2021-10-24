@@ -5,6 +5,7 @@ const userController = require("./controllers/users");
 const orderController = require("./controllers/orders");
 const discountController = require("./controllers/discounts");
 const cartController = require("./controllers/carts");
+const TransactionController = require("./controllers/transactions");
 const auth = require("./middleware/auth");
 const cors = require("cors");
 
@@ -48,6 +49,10 @@ app.post("/addCartItem", auth, cartController.addItem);
 app.post("/updateCartItem/:id", auth, cartController.updateItem);
 app.get("/deleteCartItem/:id", auth, cartController.deleteItem);
 app.get("/deleteAllCartItems", auth, cartController.deleteAll);
+
+app.get("/getHotSell", auth, TransactionController.getHotSell);
+app.get("/getTransactions/:orderId", auth, TransactionController.getTractionsByOrderId);
+
 //錯誤處理的middleware
 app.use((error, req, res, next) => {
   const status = error.statusCode || 500;
