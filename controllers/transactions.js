@@ -3,7 +3,7 @@ const db = require('../models')
 require('dotenv').config();
 const Sequelize = require('sequelize');
 
-const { Transaction } = db
+const { Transaction, Product } = db
 
 const TransactionController = {
   getHotSell: (req, res) => {
@@ -31,7 +31,12 @@ const TransactionController = {
     Transaction.findAll({
       where: {
         orderId: req.params.orderId
-      }
+      },
+      include: [
+        {
+          model: Product,
+        }
+      ]
     })
       .then(transactions => {
         res.status(200).json(transactions)

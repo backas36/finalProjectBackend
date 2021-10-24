@@ -49,22 +49,30 @@ const orderController = {
   },
 
   getOneOrder: (req, res) => {
-    // 取得單一訂單
     const { id, authority } = req.user;
+    // 取得單一訂單
     Order.findOne({
       where: {
         id: req.params.id,
       },
-    }).then((order) => {
+    })
+    .then((order) => {
       if (order.userId !== id && authority !== 1) return;
-      if (!order)
+      if (!order) {
         return res.send({ success: false, message: "sorry there is no order" });
+      }
       res.send({
         success: true,
         message: "Get an Order",
         data: order,
       });
-    });
+    })
+    .catch((err) => {
+      res.send({
+        success: false,
+        message: err.message,
+      });
+    })
   },
 
   deleteOrder: (req, res, next) => {
