@@ -57,10 +57,10 @@ const orderController = {
       },
     })
     .then((order) => {
-      if (order.userId !== id && authority !== 1) return;
       if (!order) {
         return res.send({ success: false, message: "sorry there is no order" });
       }
+      if (order.userId !== id && authority !== 1) return;
       res.send({
         success: true,
         message: "Get an Order",
@@ -68,6 +68,7 @@ const orderController = {
       });
     })
     .catch((err) => {
+      console.log(err);
       res.send({
         success: false,
         message: err.message,
