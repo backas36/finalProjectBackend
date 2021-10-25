@@ -23,7 +23,10 @@ const TransactionController = {
         res.status(200).json(transactions)
       })
       .catch(err => {
-        res.status(500).json(err)
+        res.status(500).json({
+          success: false,
+          message: err.message
+        })
       })
   },
 
@@ -42,7 +45,10 @@ const TransactionController = {
         res.status(200).json(transactions)
       })
       .catch(err => {
-        res.status(500).json(err)
+        res.status(500).json({
+          success: false,
+          message: err.message
+        })
       })
   }
 }
