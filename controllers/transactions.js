@@ -9,12 +9,16 @@ const TransactionController = {
   getHotSell: (req, res) => {
     Transaction.findAll({
       attributes: [
-        'productId', 
         [Sequelize.fn('sum', Sequelize.col('quantity')), 'total_amount'],
       ],
-      group: [
-        ['productId']
+      include: [
+        {
+          model: Product,
+        }
       ],
+      group: [
+        ['Product.id']
+      ]
     })
       .then(transactions => {
         transactions.sort((a, b) => {
