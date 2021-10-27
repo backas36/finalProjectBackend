@@ -50,7 +50,7 @@ app.post("/updateCartItem/:id", auth, cartController.updateItem);
 app.get("/deleteCartItem/:id", auth, cartController.deleteItem);
 app.get("/deleteAllCartItems", auth, cartController.deleteAll);
 
-app.get("/getHotSell", auth, TransactionController.getHotSell);
+app.get("/getHotSell", TransactionController.getHotSell);
 app.get("/getTransactions/:orderId", auth, TransactionController.getTractionsByOrderId);
 
 //錯誤處理的middleware
