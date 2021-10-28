@@ -47,7 +47,7 @@ const productsController = {
       return
     }
     const { name, desc, category, img_url, price, market_price, limited, id, is_deleted } = req.body
-    if (!name || !desc || !category || !img_url || !price || !market_price || !limited || !id || is_deleted!==null) {
+    if (!name || !desc || !category || !img_url || !price || !market_price || !limited || !id) {
       const error = new Error('Please enter every field')
       error.statusCode = 422
       next(error)
