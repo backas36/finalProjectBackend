@@ -76,6 +76,30 @@ const orderController = {
     })
   },
 
+  getHistory: (req, res) => {
+    // 取得歷史訂單
+    const { id } = req.user;
+    Order.findAll({
+      where: {
+        userId: id,
+      },
+    })
+    .then((orders) => {
+      res.send({
+        success: true,
+        message: "Get all orders successfully",
+        data: orders,
+      });
+    })
+    .catch((err) => {
+      res.send({
+        success: false,
+        message: err.message,
+      });
+    });
+  },
+
+
   deleteOrder: (req, res, next) => {
     // 商家拒單
     const { authority } = req.user;
@@ -254,6 +278,7 @@ const orderController = {
         success: false,
         message: err.message,
       });
+    }
   },
 
   completeOrder: (req, res, next) => {
