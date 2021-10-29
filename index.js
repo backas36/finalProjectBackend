@@ -61,6 +61,10 @@ app.use((error, req, res, next) => {
   res.status(status).json({ success: false, message });
 });
 
+app.use(function(req, res, next) {
+  res.status(404).send("Sorry can't find that!");
+});
+
 app.listen(port, () => {
   console.log(`Backend is listening at http://localhost:${port}`);
 });

@@ -171,13 +171,19 @@ const orderController = {
       next(error);
       return;
     }
-
-    const products = JSON.parse(req.body.products);
-    const orderObj = JSON.parse(req.body.order);
+    const { products, order } = req.body;
+    if (!products || !order) {
+      const error = new Error("Invalid input");
+      error.statusCode = 500;
+      next(error);
+      return;
+    }
+    const productsObj = JSON.parse(products);
+    const orderObj = JSON.parse(order);
     let price = null;
     let sum = 0;
     // update transaction
-    for (let product of products) {
+    for (let product of productsObj) {
       const prod = await Product.findOne({ where: { id: product.id } });
       transactionObj = await Transaction.findOne({
         where: { orderId: orderObj.id, productId: product.id },
@@ -215,8 +221,19 @@ const orderController = {
 
   newOrder: async (req, res) => {
     // 成立訂單 [{"id":1, "name": "cake", "number":1}, {"id":2, "name": "tea", "number":1}]
-    const products = req.body.products
-    const order = req.body.order
+    const { products, order } = req.body;
+    if (!products || !order || products.length === 0) {
+      return res.send({
+        success: false,
+        message: "please provide products and order",
+      });
+    }
+    if (!order.userId || !order.buyerName || !order.buyerPhone || !order.buyerAddress || !order.deliverDate || !order.receiverName || !order.receiverPhone || !order.receiverAddress || !order.lastFiveNumber || !order.donateInvoice || !order.invoiceType || !order.invoiceNumber) {
+      return res.send({
+        success: false,
+        message: "please provide order info",
+      });
+    }
     const { id } = req.user;
     let price = null;
     let sum = 0;
