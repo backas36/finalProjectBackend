@@ -191,62 +191,69 @@ const orderController = {
 
   newOrder: async (req, res) => {
     // 成立訂單 [{"id":1, "name": "cake", "number":1}, {"id":2, "name": "tea", "number":1}]
-    const products = JSON.parse(req.body.products);
-    const order = JSON.parse(req.body.order);
-    console.log(order.buyerName);
+    const products = req.body.products
+    const order = req.body.order
     const { id } = req.user;
     let price = null;
     let sum = 0;
-    const orderObj = await Order.create(
-      {
-        userId: id,
-        buyerName: order.buyerName,
-        buyerPhone: order.buyerPhone,
-        buyerAddress: order.buyerAddress,
-        deliverDate: order.deliverDate,
-        receiverName: order.receiverName,
-        receiverPhone: order.receiverPhone,
-        receiverAddress: order.receiverAddress,
-        lastFiveNumber: order.lastFiveNumber,
-        donateInvoice: order.donateInvoice,
-        invoiceType: order.invoiceType,
-        invoiceNumber: order.invoiceNumber,
-        accepted_at: null,
-        completed_at: null,
-        is_accepted: null,
-        is_completed: null,
-        price: null,
-        sum: null,
-      },
-      {
-        omitNull: false,
+    try {
+      const orderObj = await Order.create(
+        {
+          userId: id,
+          buyerName: order.buyerName,
+          buyerPhone: order.buyerPhone,
+          buyerAddress: order.buyerAddress,
+          deliverDate: order.deliverDate,
+          receiverName: order.receiverName,
+          receiverPhone: order.receiverPhone,
+          receiverAddress: order.receiverAddress,
+          lastFiveNumber: order.lastFiveNumber,
+          donateInvoice: order.donateInvoice,
+          invoiceType: order.invoiceType,
+          invoiceNumber: order.invoiceNumber,
+          accepted_at: null,
+          completed_at: null,
+          is_accepted: null,
+          is_completed: null,
+          price: null,
+          sum: null,
+        },
+        {
+          omitNull: false,
+        }
+      );
+      // create transactions
+      for (let product of products) {
+        const prod = await Product.findOne({ where: { id: product.id } });
+        await Transaction.create({
+          orderId: orderObj.id,
+          productId: prod.id,
+          quantity: product.number,
+        });
+        sum += prod.price * product.number;
       }
-    );
-    // create transactions
-    for (let product of products) {
-      const prod = await Product.findOne({ where: { id: product.id } });
-      await Transaction.create({
-        orderId: orderObj.id,
-        productId: prod.id,
-        quantity: product.number,
-      });
-      sum += prod.price * product.number;
-    }
-    // add discount
-    const discount = await isDiscount(sum);
-    if (discount) {
-      price = sum + discount.shipment;
-    }
+      // add discount
+      const discount = await isDiscount(sum);
+      if (discount) {
+        price = sum + discount.shipment;
+      }
 
-    // update order
-    const orderObjUpdate = await Order.update(
-      { sum, price, discountId: discount.id },
-      { where: { id: orderObj.id } }
-    );
-    res.send({
-      success: true,
-      data: orderObjUpdate,
-    });
+      // update order
+      const orderObjUpdate = await Order.update(
+        { sum, price, discountId: discount.id },
+        { where: { id: orderObj.id } }
+      );
+      res.send({
+        success: true,
+        data: orderObjUpdate,
+      });
+    }
+    catch (err) {
+      console.log(err);
+      res.send({
+        success: false,
+        message: err.message,
+      });
   },
 
   completeOrder: (req, res, next) => {
