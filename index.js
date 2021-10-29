@@ -36,7 +36,7 @@ app.get("/deleteOrder/:id", auth, orderController.deleteOrder);
 app.get("/acceptOrder/:id", auth, orderController.acceptOrder);
 app.get("/completeOrder/:id", auth, orderController.completeOrder);
 app.post("/updateOrder", auth, orderController.updateOrder);
-app.post("/getHistory", auth, orderController.getHistory);
+app.get("/getHistory", auth, orderController.getHistory);
 
 app.post("/createDiscounts", auth, discountController.create);
 app.post("/updateDiscounts", auth, discountController.update);
