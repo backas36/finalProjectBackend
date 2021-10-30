@@ -228,7 +228,7 @@ const orderController = {
         message: "please provide products and order",
       });
     }
-    if (!order.userId || !order.buyerName || !order.buyerPhone || !order.buyerAddress || !order.deliverDate || !order.receiverName || !order.receiverPhone || !order.receiverAddress || !order.lastFiveNumber || !order.donateInvoice || !order.invoiceType || !order.invoiceNumber) {
+    if (!order.userId || !order.buyerName || !order.buyerPhone || !order.buyerAddress || !order.deliverDate || !order.receiverName || !order.receiverPhone || !order.receiverAddress || !order.lastFiveNumber || !order.invoiceType) {
       return res.send({
         success: false,
         message: "please provide order info",
