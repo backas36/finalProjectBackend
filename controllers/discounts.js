@@ -13,7 +13,7 @@ const DiscountsController = {
       return
     }
     const { desc, threshold, shipment } = req.body
-    if (!desc || !threshold || !shipment ) {
+    if (!desc || threshold===null || shipment===null) {
       const error = new Error('Please enter every field')
       error.statusCode = 422
       next(error)
@@ -43,7 +43,7 @@ const DiscountsController = {
       return
     }
     const { desc, threshold, shipment, is_deleted, id } = req.body
-    if (!desc || !threshold || !shipment) {
+    if (!desc || threshold===null || shipment===null) {
       const error = new Error('Please enter every field')
       error.statusCode = 422
       next(error)
