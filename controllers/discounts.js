@@ -12,8 +12,8 @@ const DiscountsController = {
     if (authority !== 1) {
       return
     }
-    const { desc, price, threshold, shipment } = req.body
-    if (!desc || !threshold || !price || !shipment ) {
+    const { desc, threshold, shipment } = req.body
+    if (!desc || threshold===null || shipment===null) {
       const error = new Error('Please enter every field')
       error.statusCode = 422
       next(error)
@@ -23,7 +23,6 @@ const DiscountsController = {
     Discount
       .create({
         desc, 
-        price, 
         threshold, 
         shipment
       })
@@ -43,8 +42,8 @@ const DiscountsController = {
     if (authority !== 1) {
       return
     }
-    const { desc, price, threshold, shipment, id } = req.body
-    if (!desc || !threshold || !price || !shipment) {
+    const { desc, threshold, shipment, is_deleted, id } = req.body
+    if (!desc || threshold===null || shipment===null) {
       const error = new Error('Please enter every field')
       error.statusCode = 422
       next(error)
@@ -52,10 +51,10 @@ const DiscountsController = {
     }
     Discount
       .update({
-        desc, 
-        price, 
+        desc,  
         threshold, 
-        shipment
+        shipment,
+        is_deleted
       },
       {
         where: {

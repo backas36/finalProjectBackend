@@ -10,12 +10,13 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-
+      Product.hasMany(models.Cart_item);
     }
   };
   Product.init({
     name: DataTypes.STRING,
     desc: DataTypes.TEXT,
+    category: DataTypes.STRING,
     img_url: DataTypes.TEXT,
     price: DataTypes.INTEGER,
     market_price: DataTypes.INTEGER,
@@ -30,3 +31,4 @@ module.exports = (sequelize, DataTypes) => {
   });
   return Product;
 };
+// npx sequelize-cli db:seed:all
