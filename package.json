@@ -17,7 +17,8 @@
     "sequelize-auto-migrations-v2": "^1.2.1"
   },
   "scripts": {
-    "db:migrate": "npx sequelize-cli db:migrate",
-    "start": "node index.js"
+    "migrate": "npx sequelize-cli db:migrate",
+    "start": "node index.js",
+    "build": "npm run migrate && sh seeder.sh && npm run start"
   }
 }
